@@ -17,3 +17,7 @@ run:
 	CURRENT_UID=$(USERID) $(DOCKERCOMPOSE) up
 down:
 	$(DOCKERCOMPOSE) down
+cache:
+	$(DOCKERCOMPOSE) exec varnish varnishtop
+reload:
+	$(DOCKERCOMPOSE) restart varnish
