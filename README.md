@@ -4,8 +4,8 @@
 You must have docker-compose and docker on your machine before its installation
 
 ```
-    make setup
-    make run
+make setup
+make run
 ```
 
 ## Database credentials for Moodle install
