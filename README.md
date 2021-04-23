@@ -1,8 +1,16 @@
 # Moodle Varnish Cache Example
 
-## Database credentials for Moodle install
+## Install
+You must have docker-compose and docker on your machine before its installation
 
-Host: db
-Database: moodle
-User: root
-Password: moodlepassword
+```
+    make setup
+    make run
+```
+
+## Database credentials for Moodle install
+After installation, you will need to use that database credentials
+
+| Host | Database | User | Password       |
+|------|----------|------|----------------|
+|  db  |  moodle  | root | moodlepassword |
