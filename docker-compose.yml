@@ -8,6 +8,7 @@ services:
       - nginx
     volumes:
       - ./moodle.varnish.vcl:/etc/varnish/default.vcl
+      - /tmp/varnish:/var/log/varnish
     restart: unless-stopped
     networks:
       - moodlenetwork
