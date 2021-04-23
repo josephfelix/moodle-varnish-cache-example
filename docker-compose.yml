@@ -1,0 +1,58 @@
+version: "3"
+services:
+  varnish:
+    image: varnish:latest
+    ports:
+      - "80:80"
+    depends_on:
+      - nginx
+    volumes:
+      - ./moodle.varnish.vcl:/etc/varnish/default.vcl
+    restart: unless-stopped
+    networks:
+      - moodlenetwork
+  db:
+    image: mysql:5
+    restart: always
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_bin
+      --innodb_file_format=barracuda
+      --innodb_file_per_table=On
+      --innodb_large_prefix=On
+    environment:
+      - MYSQL_ROOT_PASSWORD=moodlepassword
+      - MYSQL_DATABASE=moodle
+    networks:
+      - moodlenetwork
+  moodle:
+    build: .
+    restart: unless-stopped
+    working_dir: /moodle
+    command: ["php-fpm"]
+    user: ${CURRENT_UID}
+    environment:
+      - MOODLE_HOST=db
+      - MOODLE_PORT=3306
+      - MOODLE_DATABASE=moodle
+      - MOODLE_USERNAME=root
+      - MOODLE_PASSWORD=moodlepassword
+    networks:
+      - moodlenetwork
+    volumes:
+      - ./moodle:/moodle
+    depends_on:
+      - db
+  nginx:
+    image: nginx
+    volumes:
+      - ./:/app:ro
+      - ./moodle.nginx.conf:/etc/nginx/conf.d/moodle.conf
+      - /tmp/nginx:/var/log/nginx
+    networks:
+      - moodlenetwork
+    depends_on:
+      - moodle
+networks:
+  moodlenetwork:
+    driver: bridge
